@@ -33,3 +33,4 @@ kubectl get pods
 
 # Get the status of the services
 kubectl get services
+```
