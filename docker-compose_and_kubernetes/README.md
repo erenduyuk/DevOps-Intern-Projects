@@ -47,9 +47,6 @@ docker-compose up
 For Kubernetes:
 
 ```bash
-# Apply the PostgreSQL secret configuration
-kubectl apply -f postgre-secret.yaml
-
 # Apply the PostgreSQL configuration
 kubectl apply -f postgre-config.yaml
 
