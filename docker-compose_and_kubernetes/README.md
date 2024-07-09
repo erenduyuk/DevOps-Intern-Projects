@@ -1,39 +1,79 @@
-# Ka|Ve Docker Compose Example
-# Açıklama
+# Docker Compose and Kubernetes
 
-Bu çalışma kapsamında temel bir streamlit uygulamasını front-end, fastapi uygulamasını back-end olarak kullanacağız. Kullanıcıdan streamlit üzerinden değerleri alarak arka plandaki fastapi servisimizde tahminleme işlemini gerçekleştireceğiz. Ardından API'den gelen sonucu ekrana yazdıracağız. 
+## Description
 
-# AWS üzerinde Canlıya Alma
-- AWS üzerinde uygulamanın canlıya alınabilmesi için öncelikle [AWS EC2](https://us-east-1.console.aws.amazon.com/ec2/) servisi üzerinden 1GB RAM 1VCPU'ya sahip bir makine açılması gerekmektedir. Makine tipi olarak ücretsiz olduğu için t2.micro tercih edilebilir. 
-- Ayarlar yapılırken security group ayarında bütün portlar(önerilmez veya streamlit uygulamasının yayınlanacağı porta erişim verilmesi gerekmektedir. 
-- Makine açıldıktan sonra makineye ssh veya ec2-serial-console kullanılarak erişilebilir.
-- Amazon makineleri yüksek ihtimalle python3 yüklü olarak gelmektedir. Eğer gelmediyse internet üzerinden Debian/Linux makinelere nasıl python yükleneceğine bakabilirsiniz.
-- Makineye gerekli kodların çekilebilmesi için git yüklenir. 
+This project combines Docker Compose and Kubernetes for deploying a FastAPI application, PostgreSQL database, and Streamlit application. 
+
+This application calculates whether you can survive on the Titanic based on the values ​​entered on the website created with Streamlit. This calculation is made with the titanic_model.sav model in the fastapi folder. And then it saves this result to the database.
+
+![Ekran Resmi 2024-07-09 11 34 33](https://github.com/erenduyuk/DevOps-Intern-Projects/assets/106580963/4f58f709-1c5f-4fe4-bc8a-2b1c35146624)
+
+## Features
+
+- Docker Compose configuration for local development
+- Kubernetes configurations for production deployment
 
 
-### Gerekli Kütüphanelerin Yüklenmesi
+- `docker-compose.yml`: Docker Compose configuration
+- `fastapi-config.yaml`: Kubernetes config for FastAPI
+- `fastapi.yaml`: Kubernetes deployment for FastAPI
+- `postgre-config.yaml`: Kubernetes config for PostgreSQL
+- `postgre-secret.yaml`: Secret configuration for PostgreSQL
+- `postgre.yaml`: Kubernetes deployment for PostgreSQL
+- `streamlit.yaml`: Kubernetes deployment for Streamlit
+
+### FastAPI
+
+- `fastapi/Dockerfile`
+- `fastapi/main.py`
+- `fastapi/models.py`
+- `fastapi/requirements.txt`
+- `fastapi/titanic_model.sav`
+
+### Streamlit
+
+- `streamlit/Dockerfile`
+- `streamlit/app.py`
+- `streamlit/requirements.txt`
+
+## Installation
+
+For Docker Compose:
+
+```bash
+docker-compose up
 ```
-# Sudo yetkisi alınmadıysa sudo su ile yetki alınmalıdır. 
-yum install docker git -y
 
-# Docker servisinin başlatılması
-systemctl restart docker
+For Kubernetes:
+
+```bash
+# Apply the PostgreSQL secret configuration
+kubectl apply -f postgre-secret.yaml
+
+# Apply the PostgreSQL configuration
+kubectl apply -f postgre-config.yaml
+
+# Deploy the PostgreSQL instance
+kubectl apply -f postgre.yaml
+
+# Apply the FastAPI configuration
+kubectl apply -f fastapi-config.yaml
+
+# Deploy the FastAPI application
+kubectl apply -f fastapi.yaml
+
+# Deploy the Streamlit application
+kubectl apply -f streamlit.yaml
 ```
 
-### Docker Compose Yükleme
-Docker compose yüklemek için alttaki komutları kullanabilirsiniz.
-```
-sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+## Usage
 
-sudo chmod +x /usr/local/bin/docker-compose
+### Whether kubernetes or docker compose ports are as follows
 
-docker-compose version
-```
+- streamlit 8501
+- fastapi 8000
+- postgresql 5432
 
-### Çalıştırma
-İlk çalıştırma için --build komutunu kullanarak imagelerin kurulmasını sağlıyoruz. 
-```
-docker-compose up --build
-```
+## Note
 
-Ardından makinenin public ipsinde 8501 portuna giderek uygulamaya erişebilirsiniz.
+This project was developed based on `https://github.com/kaveai/docker-compose-example.git`
