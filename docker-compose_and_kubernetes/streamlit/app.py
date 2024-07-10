@@ -3,12 +3,6 @@ import requests
 import json
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from cryptography.fernet import Fernet
-
-# Generate a key for encryption
-# Make sure to keep this key safe and secret!
-key = Fernet.generate_key()
-cipher_suite = Fernet(key)
 
 # Function to create the table if it doesn't exist
 def create_table_if_not_exists(connection):
@@ -16,7 +10,7 @@ def create_table_if_not_exists(connection):
     CREATE TABLE IF NOT EXISTS predictions (
         id SERIAL PRIMARY KEY,
         pclass INT,
-        sex VARCHAR(10),
+        sex VARCHAR(20),
         age INT,
         sibsp INT,
         parch INT,
@@ -30,10 +24,6 @@ def create_table_if_not_exists(connection):
     cursor.execute(create_table_query)
     connection.commit()
     cursor.close()
-
-# Function to encrypt data
-def encrypt_data(data):
-    return cipher_suite.encrypt(data.encode()).decode()
 
 # Function to log prediction to database
 def log_to_db(pclass, sex, age, sibsp, parch, embarked, title, survive, proba):
@@ -53,11 +43,7 @@ def log_to_db(pclass, sex, age, sibsp, parch, embarked, title, survive, proba):
         """
         # Convert survive string to boolean
         survive_bool = True if survive == "Survived" else False
-        # Encrypt sensitive data
-        sex_encrypted = encrypt_data(sex)
-        embarked_encrypted = encrypt_data(embarked)
-        title_encrypted = encrypt_data(title)
-        cursor.execute(insert_query, (pclass, sex_encrypted, age, sibsp, parch, embarked_encrypted, title_encrypted, survive_bool, proba))
+        cursor.execute(insert_query, (pclass, sex, age, sibsp, parch, embarked, title, survive_bool, proba))
         connection.commit()
         cursor.close()
         connection.close()

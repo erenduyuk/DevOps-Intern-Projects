@@ -26,7 +26,13 @@ services:
       - "5432:5432"
     networks:
       - app-network
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
       
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  database-data:
+    driver: local

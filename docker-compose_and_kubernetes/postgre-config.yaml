@@ -4,3 +4,5 @@ metadata:
   name: postgre-config
 data:
   postgre-url: postgre-service
+  postgre-user: postgres
+  postgre-password: postgres

@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: fastapi
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fastapi
-        build: ./fastapi
+        image: erenduyukforinvest/titanicfastapi:latest
         ports:
         - containerPort: 8000
 

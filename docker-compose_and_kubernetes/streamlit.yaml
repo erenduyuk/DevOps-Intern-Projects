@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: streamlit
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: streamlit
-        build: ./streamlit
+        image: erenduyukforinvest/titanicstreamlit:latest
         ports:
         - containerPort: 8501
         env:
@@ -27,8 +27,8 @@ spec:
               key: postgre-url
         - name: POSTGRES_USER
           valueFrom:
-            secretKeyRef:
-              name: postgre-secret
+            configMapKeyRef:
+              name: postgre-config
               key: postgre-user
         - name: POSTGRES_PASSWORD
           valueFrom:
